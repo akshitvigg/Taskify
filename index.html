@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="super-container">
+    <div class="container">
+        <div class="title">
+            <h1>Taskify</h1>
+            <input class="input-box" type="text" id="todoInput" placeholder="Add a new todo..." />
+            <input class="input-box" type="text" id="todoDescription" placeholder="Add a description..." />
+            <button class="add" id="addTodo">Add Todo</button>
+            
+            <button class="add" id="deleteFinished">Delete All Finished</button>
+        </div>
+
+        <div class="columns">
+            <div class="column" id="todoColumn">
+                <h2 style="background-color: rgba(255, 58, 58, 0.2);" class="title">Todo</h2>
+                <ul id="todoList" class="task-list"></ul>
+            </div>
+            <div class="column" id="inProgressColumn">
+                <h2 style="background-color: rgba(255, 251, 34, 0.2);" class="title">In Progress</h2>
+                <ul id="inProgressList" class="task-list"></ul>
+            </div>
+            <div class="column" id="reviewColumn">
+                <h2 style="background-color: rgba(255, 251, 34, 0.2);" class="title">Review</h2>
+                <ul id="reviewList" class="task-list"></ul>
+            </div>
+            <div class="column" id="finishedColumn">
+                <h2 style="background-color: rgba(34, 255, 45, 0.2);" class="title">Finished</h2>
+                <ul id="finishedList" class="task-list"></ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
