@@ -1,4 +1,4 @@
-/* General Styles */
+
 body {
     font-family: 'Arial', sans-serif;
     background-color: #121212;
@@ -7,7 +7,6 @@ body {
     padding: 0;
 }
 
-/* Main Container */
 .super-container {
     height: 100vh;
     display: flex;
@@ -17,7 +16,7 @@ body {
     padding: 20px;
 }
 
-/* Title and Input Section */
+
 .title {
     color: white;
     font-size: 36px;
@@ -82,7 +81,7 @@ body {
     border-radius: 5px;
 }
 
-/* Task Styles */
+
 .task {
     margin: 10px 0;
     padding: 15px;
