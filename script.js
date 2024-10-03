@@ -12,22 +12,21 @@ document.addEventListener('DOMContentLoaded', () => {
         li.className = 'task';
         li.draggable = true;
 
-        // Create a span for the todo text
         const todoTitle = document.createElement('span');
         todoTitle.className = 'todo-title';
         todoTitle.textContent = todoText;
 
-        // Create a paragraph for the todo description
+     
         const todoDesc = document.createElement('p');
         todoDesc.className = 'todo-desc';
         todoDesc.textContent = todoDescText;
 
-        // Add delete button to the task
+
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'delete-btn';
-        deleteBtn.innerHTML = '&times;'; // Cross symbol
+        deleteBtn.innerHTML = '&times;'; ol
         deleteBtn.addEventListener('click', function () {
-            li.remove(); // Remove the todo item when clicked
+            li.remove(); 
         });
 
         li.appendChild(todoTitle);
@@ -46,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         todoInput.value = '';
         todoDescription.value = '';
 
-        // Drag and drop functionality
+
         const columns = document.querySelectorAll('.column');
 
         columns.forEach(column => {
@@ -71,9 +70,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Delete all finished todos
+    
     document.getElementById('deleteFinished').addEventListener('click', function() {
         const finishedList = document.getElementById('finishedList');
-        finishedList.innerHTML = '';  // Clear all finished todos
+        finishedList.innerHTML = '';  
     });
 });
