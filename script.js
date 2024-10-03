@@ -1,78 +1,150 @@
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('addTodo').addEventListener('click', function() {
-        const todoInput = document.getElementById('todoInput');
-        const todoDescription = document.getElementById('todoDescription');
+    const addTodoButton = document.getElementById('addTodo');
+    const todoInput = document.getElementById('todoInput');
+    const todoDescription = document.getElementById('todoDescription');
+    const deleteFinishedButton = document.getElementById('deleteFinished');
+    const columns = document.querySelectorAll('.column');
+    let draggedItem = null;
+
+    addTodoButton.addEventListener('click', addTodo);
+
+    function addTodo() {
         const todoText = todoInput.value.trim();
         const todoDescText = todoDescription.value.trim();
-
         if (todoText === '') return;
 
         const todoList = document.getElementById('todoList');
+        const li = createTodoItem(todoText, todoDescText);
+        todoList.appendChild(li);
+
+        todoInput.value = '';
+        todoDescription.value = '';
+    }
+
+    function createTodoItem(text, description) {
         const li = document.createElement('li');
         li.className = 'task';
         li.draggable = true;
 
         const todoTitle = document.createElement('span');
         todoTitle.className = 'todo-title';
-        todoTitle.textContent = todoText;
+        todoTitle.textContent = text;
 
-     
         const todoDesc = document.createElement('p');
         todoDesc.className = 'todo-desc';
-        todoDesc.textContent = todoDescText;
-
+        todoDesc.textContent = description;
 
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'delete-btn';
-        deleteBtn.innerHTML = '&times;'; 
-        deleteBtn.addEventListener('click', function () {
-            li.remove(); 
+        deleteBtn.innerHTML = '&times;';
+        deleteBtn.addEventListener('click', function() {
+            li.remove();
         });
 
         li.appendChild(todoTitle);
         li.appendChild(todoDesc);
         li.appendChild(deleteBtn);
 
-        li.addEventListener('dragstart', () => {
-            li.classList.add('dragging');
-        });
+        addDragAndTouchListeners(li);
 
-        li.addEventListener('dragend', () => {
-            li.classList.remove('dragging');
-        });
+        return li;
+    }
 
-        todoList.appendChild(li);
-        todoInput.value = '';
-        todoDescription.value = '';
+    function addDragAndTouchListeners(element) {
+        element.addEventListener('dragstart', dragStart);
+        element.addEventListener('dragend', dragEnd);
 
+        element.addEventListener('touchstart', touchStart, {passive: true});
+        element.addEventListener('touchmove', touchMove, {passive: false});
+        element.addEventListener('touchend', touchEnd);
+    }
 
-        const columns = document.querySelectorAll('.column');
+    function dragStart() {
+        draggedItem = this;
+        setTimeout(() => this.style.display = 'none', 0);
+    }
 
-        columns.forEach(column => {
-            column.addEventListener('dragover', (e) => {
-                e.preventDefault();
-            });
+    function dragEnd() {
+        setTimeout(() => this.style.display = '', 0);
+        draggedItem = null;
+    }
 
-            column.addEventListener('drop', (e) => {
-                const draggingItem = document.querySelector('.dragging');
-                const targetList = column.querySelector('ul');
+    let touchStartY;
+    let touchStartTop;
 
-                if (column.id === 'inProgressColumn' || column.id === 'reviewColumn') {
-                    draggingItem.style.backgroundColor = 'rgba(255, 251, 34, 0.2)';
-                } else if (column.id === 'finishedColumn') {
-                    draggingItem.style.backgroundColor = 'rgba(34, 255, 45, 0.2)';
-                } else {
-                    draggingItem.style.backgroundColor = 'rgba(255, 58, 58, 0.2)';
-                }
+    function touchStart(e) {
+        draggedItem = this;
+        touchStartY = e.touches[0].clientY;
+        touchStartTop = this.offsetTop;
+        this.style.transition = 'none';
+        this.style.zIndex = '1000';
+    }
 
-                targetList.appendChild(draggingItem);
-            });
-        });
+    function touchMove(e) {
+        if (!draggedItem) return;
+        e.preventDefault();
+        const touchY = e.touches[0].clientY;
+        const deltaY = touchY - touchStartY;
+        draggedItem.style.top = `${touchStartTop + deltaY}px`;
+    }
+
+    function touchEnd(e) {
+        if (!draggedItem) return;
+        draggedItem.style.transition = '';
+        draggedItem.style.top = '';
+        draggedItem.style.zIndex = '';
+
+        const touch = e.changedTouches[0];
+        const elementAtTouch = document.elementFromPoint(touch.clientX, touch.clientY);
+        const column = elementAtTouch.closest('.column');
+
+        if (column) {
+            const targetList = column.querySelector('ul');
+            updateTaskStyle(draggedItem, column.id);
+            targetList.appendChild(draggedItem);
+        }
+
+        draggedItem = null;
+    }
+
+    columns.forEach(column => {
+        column.addEventListener('dragover', dragOver);
+        column.addEventListener('dragenter', dragEnter);
+        column.addEventListener('dragleave', dragLeave);
+        column.addEventListener('drop', drop);
     });
 
-    
-    document.getElementById('deleteFinished').addEventListener('click', function() {
+    function dragOver(e) {
+        e.preventDefault();
+    }
+
+    function dragEnter(e) {
+        e.preventDefault();
+        this.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+    }
+
+    function dragLeave() {
+        this.style.backgroundColor = '';
+    }
+
+    function drop() {
+        this.style.backgroundColor = '';
+        updateTaskStyle(draggedItem, this.id);
+        this.querySelector('ul').appendChild(draggedItem);
+    }
+
+    function updateTaskStyle(task, columnId) {
+        if (columnId === 'inProgressColumn' || columnId === 'reviewColumn') {
+            task.style.backgroundColor = 'rgba(255, 251, 34, 0.2)';
+        } else if (columnId === 'finishedColumn') {
+            task.style.backgroundColor = 'rgba(34, 255, 45, 0.2)';
+        } else {
+            task.style.backgroundColor = 'rgba(255, 58, 58, 0.2)';
+        }
+    }
+
+    deleteFinishedButton.addEventListener('click', function() {
         const finishedList = document.getElementById('finishedList');
-        finishedList.innerHTML = '';  
+        finishedList.innerHTML = '';
     });
 });
