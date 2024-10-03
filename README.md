@@ -1,2 +1,2 @@
 #Taskify
-A basic todo application
+A basic todo website
