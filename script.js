@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'delete-btn';
-        deleteBtn.innerHTML = '&times;'; ol
+        deleteBtn.innerHTML = '&times;'; 
         deleteBtn.addEventListener('click', function () {
             li.remove(); 
         });
